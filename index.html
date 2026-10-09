@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My AI Day Planner</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #222;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* HEADER */
+
+.header {
+    background: linear-gradient(135deg, #243b55, #141e30);
+    color: white;
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    opacity: 0.85;
+}
+
+/* DATE */
+
+.date-section {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.date-section label {
+    font-weight: bold;
+}
+
+.date-section input {
+    margin-left: 10px;
+    padding: 9px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* ADD TASK */
+
+.add-section {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.add-section h2 {
+    margin-bottom: 15px;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.input-row input,
+.input-row select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.task-input {
+    flex: 1;
+    min-width: 250px;
+}
+
+button {
+    border: none;
+    padding: 11px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-btn {
+    background: #2563eb;
+    color: white;
+}
+
+/* STATISTICS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+
+.stat h3 {
+    font-size: 28px;
+}
+
+.stat p {
+    color: #666;
+    margin-top: 5px;
+}
+
+/* TOOLBAR */
+
+.toolbar {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.toolbar input,
+.toolbar select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* TASK */
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.task {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+    border-left: 6px solid #94a3b8;
+}
+
+.task.high {
+    border-left-color: #ef4444;
+}
+
+.task.medium {
+    border-left-color: #f59e0b;
+}
+
+.task.low {
+    border-left-color: #22c55e;
+}
+
+.task.highlight {
+    background: #fff7c2;
+}
+
+.task.completed {
+    opacity: 0.65;
+}
+
+.task.completed .task-title {
+    text-decoration: line-through;
+}
+
+.check {
+    width: 20px;
+    height: 20px;
+}
+
+.task-content {
+    flex: 1;
+}
+
+.task-title {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.task-info {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #666;
+}
+
+.priority {
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.priority.high {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.priority.medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.priority.low {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.actions button {
+    padding: 7px 9px;
+    font-size: 12px;
+}
+
+.highlight-btn {
+    background: #facc15;
+}
+
+.edit-btn {
+    background: #dbeafe;
+}
+
+.delete-btn {
+    background: #fee2e2;
+}
+
+.carry-btn {
+    background: #dcfce7;
+}
+
+/* EMPTY */
+
+.empty {
+    text-align: center;
+    padding: 50px;
+    color: #777;
+    background: white;
+    border-radius: 15px;
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #777;
+    font-size: 14px;
+}
+
+@media(max-width:700px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .task {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .actions {
+        width: 100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>🌅 My AI Day Planner</h1>
+
+        <p>
+            Don't Just Use AI — Build AI
+        </p>
+
+    </div>
+
+
+    <!-- DATE -->
+
+    <div class="date-section">
+
+        <label>Select Date:</label>
+
+        <input type="date" id="datePicker">
+
+    </div>
+
+
+    <!-- ADD TASK -->
+
+    <div class="add-section">
+
+        <h2>➕ Add Today's Task</h2>
+
+        <div class="input-row">
+
+            <input
+                type="text"
+                id="taskInput"
+                class="task-input"
+                placeholder="Enter your task..."
+            >
+
+            <select id="priority">
+
+                <option value="high">High Priority</option>
+
+                <option value="medium" selected>
+                    Medium Priority
+                </option>
+
+                <option value="low">
+                    Low Priority
+                </option>
+
+            </select>
+
+            <button
+                class="add-btn"
+                id="addTaskBtn"
+            >
+                Add Task
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <h3 id="totalTasks">0</h3>
+
+            <p>Total Tasks</p>
+
+        </div>
+
+
+        <div class="stat">
+
+            <h3 id="completedTasks">0</h3>
+
+            <p>Completed</p>
+
+        </div>
+
+
+        <div class="stat">
+
+            <h3 id="pendingTasks">0</h3>
+
+            <p>Pending</p>
+
+        </div>
+
+
+        <div class="stat">
+
+            <h3 id="progress">0%</h3>
+
+            <p>Progress</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH AND FILTER -->
+
+    <div class="toolbar">
+
+        <input
+            type="text"
+            id="search"
+            placeholder="🔍 Search tasks..."
+            oninput="displayTasks()"
+        >
+
+
+        <select
+            id="filter"
+            onchange="displayTasks()"
+        >
+
+            <option value="all">
+                All Tasks
+            </option>
+
+            <option value="pending">
+                Pending
+            </option>
+
+            <option value="completed">
+                Completed
+            </option>
+
+            <option value="highlighted">
+                Highlighted
+            </option>
+
+        </select>
+
+
+        <button
+            class="carry-btn"
+            onclick="carryPendingTasks()"
+        >
+            📅 Carry Pending to Today
+        </button>
+
+    </div>
+
+
+    <!-- TASK LIST -->
+
+    <div id="taskList" class="task-list"></div>
+
+
+    <div class="footer">
+
+        Built from a real-life daily habit ✍️ →
+        Web Application →
+        Future AI Integration 🤖
+
+    </div>
+
+</div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADGdqGArsG-FZ3lIw8ZDXUOlZ1L1Qoi98",
+  authDomain: "ai-day-planner-1.firebaseapp.com",
+  projectId: "ai-day-planner-1",
+  storageBucket: "ai-day-planner-1.firebasestorage.app",
+  messagingSenderId: "164393405551",
+  appId: "1:164393405551:web:6d6c1170c57b98ea5fd19a",
+  measurementId: "G-Q38F8RX47X"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let tasks = [];
+let currentUser = null;
+let loading = false;
+
+// Add a small sign-in panel without changing the planner's existing layout.
+const authPanel = document.createElement('section');
+authPanel.className = 'add-section';
+authPanel.innerHTML = `
+  <h2>🔐 Cloud account</h2>
+  <p style="margin-bottom:12px">Create an account or sign in to sync your tasks across devices.</p>
+  <div class="input-row">
+    <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" style="flex:1;min-width:220px;padding:12px;border:1px solid #ccc;border-radius:8px">
+    <input id="authPassword" type="password" placeholder="Password (at least 6 characters)" autocomplete="current-password" style="flex:1;min-width:220px;padding:12px;border:1px solid #ccc;border-radius:8px">
+    <button class="add-btn" id="signInBtn">Sign in</button>
+    <button class="carry-btn" id="signUpBtn">Create account</button>
+    <button class="delete-btn" id="signOutBtn" hidden>Sign out</button>
+  </div>
+  <p id="authStatus" role="status" style="margin-top:10px;color:#555">Sign in to load your cloud tasks.</p>`;
+document.querySelector('.header').insertAdjacentElement('afterend', authPanel);
+const emailEl = document.getElementById('authEmail');
+const passwordEl = document.getElementById('authPassword');
+const authStatus = document.getElementById('authStatus');
+const signInBtn = document.getElementById('signInBtn');
+const signUpBtn = document.getElementById('signUpBtn');
+const signOutBtn = document.getElementById('signOutBtn');
+document.getElementById('addTaskBtn').addEventListener('click', addTask);
+function userTasksRef() {
+  if (!currentUser) throw new Error('Please sign in first.');
+  return collection(db, 'users', currentUser.uid, 'tasks');
+}
+function setAuthMessage(message, isError=false) {
+  authStatus.textContent = message;
+  authStatus.style.color = isError ? '#b91c1c' : '#237a43';
+}
+function friendlyError(error) {
+  const messages = {
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/email-already-in-use': 'This email already has an account. Please sign in.',
+    'auth/weak-password': 'Choose a password with at least 6 characters.',
+    'auth/invalid-credential': 'Email or password is incorrect.',
+    'auth/user-not-found': 'No account found. Create an account first.',
+    'auth/network-request-failed': 'Network error. Check your internet connection.',
+    'permission-denied': 'Firestore access denied. Check that Authentication is enabled and the security rules are installed.'
+  };
+  return messages[error.code] || error.message || 'Something went wrong.';
+}
+async function withErrorHandling(operation) {
+  try { await operation(); }
+  catch (error) { console.error(error); alert(friendlyError(error)); }
+}
+
+signInBtn.addEventListener('click', () => withErrorHandling(async () => {
+  if (!emailEl.value.trim() || !passwordEl.value) throw new Error('Enter your email and password.');
+  await signInWithEmailAndPassword(auth, emailEl.value.trim(), passwordEl.value);
+  setAuthMessage('Signed in. Loading your cloud tasks…');
+}));
+signUpBtn.addEventListener('click', () => withErrorHandling(async () => {
+  if (!emailEl.value.trim() || !passwordEl.value) throw new Error('Enter an email and password.');
+  if (passwordEl.value.length < 6) throw new Error('Choose a password with at least 6 characters.');
+  await createUserWithEmailAndPassword(auth, emailEl.value.trim(), passwordEl.value);
+  setAuthMessage('Account created. Your tasks will now be saved in the cloud.');
+}));
+signOutBtn.addEventListener('click', () => withErrorHandling(async () => { await signOut(auth); }));
+
+const datePicker = document.getElementById('datePicker');
+const today = new Date();
+datePicker.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+async function loadTasks() {
+  if (!currentUser) { tasks = []; displayTasks(); return; }
+  loading = true;
+  try {
+    const snapshot = await getDocs(query(userTasksRef(), orderBy('createdAt', 'asc')));
+    tasks = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
+    setAuthMessage(`Signed in as ${currentUser.email}. Tasks are synced with Firestore.`);
+  } catch (error) {
+    console.error(error);
+    setAuthMessage(friendlyError(error), true);
+    tasks = [];
+  } finally { loading = false; displayTasks(); }
+}
+
+async function addTask() {
+  const input = document.getElementById('taskInput');
+  const title = input.value.trim();
+  if (!title) { alert('Please enter a task.'); return; }
+  if (!currentUser) { alert('Please create an account or sign in before adding cloud tasks.'); return; }
+  const task = { title, date: datePicker.value, priority: document.getElementById('priority').value, completed: false, highlighted: false, createdAt: Date.now() };
+  await withErrorHandling(async () => { const result = await addDoc(userTasksRef(), task); tasks.push({ id: result.id, ...task }); input.value = ''; displayTasks(); });
+}
+
+function displayTasks() {
+  const list = document.getElementById('taskList');
+  const selectedDate = datePicker.value;
+  const search = document.getElementById('search').value.toLowerCase();
+  const filter = document.getElementById('filter').value;
+  const filtered = tasks.filter(task => {
+    if (task.date !== selectedDate) return false;
+    if (search && !String(task.title || '').toLowerCase().includes(search)) return false;
+    if (filter === 'pending' && task.completed) return false;
+    if (filter === 'completed' && !task.completed) return false;
+    if (filter === 'highlighted' && !task.highlighted) return false;
+    return true;
+  });
+  list.innerHTML = '';
+  if (!currentUser) {
+    list.innerHTML = '<div class="empty"><h2>🔐 Sign in to view your tasks</h2><p>Your cloud tasks are private to your account.</p></div>';
+    updateStats(); return;
+  }
+  if (loading) {
+    list.innerHTML = '<div class="empty">Loading tasks from the cloud…</div>';
+    updateStats(); return;
+  }
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty"><h2>📝 No tasks yet</h2><p>Start your day by adding your tasks.</p></div>';
+    updateStats(); return;
+  }
+  filtered.forEach(task => {
+    const div = document.createElement('div');
+    div.className = `task ${task.priority} ${task.highlighted ? 'highlight' : ''} ${task.completed ? 'completed' : ''}`;
+    const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.className = 'check'; checkbox.checked = !!task.completed;
+    checkbox.addEventListener('change', () => toggleComplete(task.id));
+    const content = document.createElement('div'); content.className = 'task-content';
+    const title = document.createElement('div'); title.className = 'task-title'; title.textContent = task.title;
+    const info = document.createElement('div'); info.className = 'task-info';
+    const badge = document.createElement('span'); badge.className = `priority ${task.priority}`; badge.textContent = String(task.priority || 'medium').toUpperCase();
+    info.appendChild(badge); if (task.highlighted) info.append(' ⭐ Highlighted');
+    content.append(title, info);
+    const actions = document.createElement('div'); actions.className = 'actions';
+    const highlight = document.createElement('button'); highlight.className = 'highlight-btn'; highlight.textContent = '⭐'; highlight.title = 'Highlight'; highlight.addEventListener('click', () => highlightTask(task.id));
+    const edit = document.createElement('button'); edit.className = 'edit-btn'; edit.textContent = '✏️ Edit'; edit.addEventListener('click', () => editTask(task.id));
+    const del = document.createElement('button'); del.className = 'delete-btn'; del.textContent = '🗑️'; del.title = 'Delete'; del.addEventListener('click', () => deleteTask(task.id));
+    actions.append(highlight, edit, del); div.append(checkbox, content, actions); list.appendChild(div);
+  });
+  updateStats();
+}
+async function updateTask(id, changes) {
+  if (!currentUser) return;
+  await withErrorHandling(async () => { await updateDoc(doc(db, 'users', currentUser.uid, 'tasks', id), changes); const task = tasks.find(t => t.id === id); if (task) Object.assign(task, changes); displayTasks(); });
+}
+function toggleComplete(id) { const task = tasks.find(t => t.id === id); if (task) updateTask(id, { completed: !task.completed }); }
+function highlightTask(id) { const task = tasks.find(t => t.id === id); if (task) updateTask(id, { highlighted: !task.highlighted }); }
+function editTask(id) {
+  const task = tasks.find(t => t.id === id); if (!task) return;
+  const title = prompt('Update your task:', task.title);
+  if (title !== null && title.trim()) updateTask(id, { title: title.trim() });
+}
+function deleteTask(id) {
+  if (!confirm('Delete this task?')) return;
+  withErrorHandling(async () => { await deleteDoc(doc(db, 'users', currentUser.uid, 'tasks', id)); tasks = tasks.filter(t => t.id !== id); displayTasks(); });
+}
+async function carryPendingTasks() {
+  if (!currentUser) { alert('Please sign in first.'); return; }
+  const selectedDate = datePicker.value;
+  const pending = tasks.filter(task => task.date !== selectedDate && !task.completed);
+  if (!pending.length) { alert('No pending tasks available to carry forward.'); return; }
+  let count = 0;
+  await withErrorHandling(async () => {
+    for (const oldTask of pending) {
+      if (tasks.some(task => task.title === oldTask.title && task.date === selectedDate)) continue;
+      const copy = { title: oldTask.title, date: selectedDate, priority: oldTask.priority, completed: false, highlighted: !!oldTask.highlighted, createdAt: Date.now() + Math.random() };
+      const result = await addDoc(userTasksRef(), copy); tasks.push({ id: result.id, ...copy }); count++;
+    }
+    displayTasks(); alert(`${count} pending task(s) carried forward!`);
+  });
+}
+function updateStats() {
+  const selectedDate = datePicker.value;
+  const todayTasks = tasks.filter(task => task.date === selectedDate);
+  const total = todayTasks.length;
+  const completed = todayTasks.filter(task => task.completed).length;
+  document.getElementById('totalTasks').textContent = total;
+  document.getElementById('completedTasks').textContent = completed;
+  document.getElementById('pendingTasks').textContent = total - completed;
+  document.getElementById('progress').textContent = (total ? Math.round(completed / total * 100) : 0) + '%';
+}
+
+datePicker.addEventListener('change', displayTasks);
+document.getElementById('search').addEventListener('input', displayTasks);
+document.getElementById('filter').addEventListener('change', displayTasks);
+document.getElementById('taskInput').addEventListener('keydown', event => { if (event.key === 'Enter') addTask(); });
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  signInBtn.hidden = !!user; signUpBtn.hidden = !!user; signOutBtn.hidden = !user;
+  emailEl.disabled = !!user; passwordEl.disabled = !!user;
+  if (user) await loadTasks(); else { tasks = []; setAuthMessage('Sign in or create an account to sync tasks securely.'); displayTasks(); }
+});
+</script>
+
+</body>
+</html>
